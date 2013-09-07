@@ -4,6 +4,7 @@ public class Teste {
 	
 	
 		void teste(){
-			System.out.println("teste");
+			System.out.println("teste2");
 		}
+		
 }
