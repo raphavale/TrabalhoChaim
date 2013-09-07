@@ -7,4 +7,8 @@ public class Teste {
 			System.out.println("teste2");
 		}
 		
+		void teste2(){
+			System.out.println("Teste2");
+		}
+		
 }
