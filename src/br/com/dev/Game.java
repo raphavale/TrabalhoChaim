@@ -61,19 +61,19 @@ public class Game extends JFrame implements KeyListener {
 	public void keyPressed(KeyEvent e) {
 		// TODO Auto-generated method stub
 		
-		if (e.getKeyCode() == e.VK_LEFT){
+		if (e.getKeyCode() == KeyEvent.VK_LEFT){
 			ash.andarEsq();
 			ash.animar('l');
 		}
-		if (e.getKeyCode() == e.VK_RIGHT){
+		if (e.getKeyCode() == KeyEvent.VK_RIGHT){
 			ash.andarDir();
 			ash.animar('r');
 		}
-		if (e.getKeyCode() == e.VK_UP){
+		if (e.getKeyCode() == KeyEvent.VK_UP){
 			ash.andarCima();
 			ash.animar('u');
 		}
-		if (e.getKeyCode() == e.VK_DOWN){
+		if (e.getKeyCode() == KeyEvent.VK_DOWN){
 			ash.andarBaixo();
 			ash.animar('d');
 		}
