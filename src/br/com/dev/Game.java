@@ -3,7 +3,6 @@ package br.com.dev;
 import java.awt.event.KeyEvent;
 import java.awt.event.KeyListener;
 import java.awt.image.BufferedImage;
-
 import javax.swing.JFrame;
 
 public class Game extends JFrame implements KeyListener {
@@ -11,13 +10,14 @@ public class Game extends JFrame implements KeyListener {
 	/**
 	 * 
 	 */
-	
+
 	BufferedImage backBuffer;
 	int FPS = 100;
 	int janelaW = 500;
 	int janelaH = 500;
 	Sprite ash;
 	char teclaPressionada;
+
 	public void inicializar() {
 		setTitle("Titulo do Jogo!");
 		setResizable(false);
@@ -27,9 +27,9 @@ public class Game extends JFrame implements KeyListener {
 		setBounds(100, 100, janelaW, janelaH);
 		backBuffer = new BufferedImage(janelaW, janelaH,
 				BufferedImage.TYPE_INT_RGB);
-		
+
 		ash = new Sprite("andando", 250, 250);
-		
+
 		addKeyListener(this);
 	}
 
@@ -37,11 +37,11 @@ public class Game extends JFrame implements KeyListener {
 		inicializar();
 		while (true) {
 			atualizar();
-			new Mapa().desenharMapa(backBuffer, getGraphics(),this);
-			ash.desenharSprite(backBuffer, getGraphics(),'u', this);
-			//ash.animarUp();
-			//ash.animar('u');
-			
+			new Mapa().desenharMapa(backBuffer, getGraphics(), this);
+			ash.desenharSprite(backBuffer, getGraphics(), 'u', this);
+			// ash.animarUp();
+			// ash.animar('u');
+
 			try {
 				Thread.sleep(1000 / FPS);
 			} catch (Exception e) {
@@ -49,48 +49,60 @@ public class Game extends JFrame implements KeyListener {
 			}
 		}
 	}
+
 	public void atualizar() {
-		 
-	 }
+
+	}
+
 	public static void main(String[] args) {
 		Game game = new Game();
 		game.run();
 	}
 
+	
+	private long agora = System.currentTimeMillis();
+	
 	@Override
 	public void keyPressed(KeyEvent e) {
 		// TODO Auto-generated method stub
 		
-		if (e.getKeyCode() == KeyEvent.VK_LEFT){
-			ash.andarEsq();
-			ash.animar('l');
-		}
-		if (e.getKeyCode() == KeyEvent.VK_RIGHT){
-			ash.andarDir();
-			ash.animar('r');
-		}
-		if (e.getKeyCode() == KeyEvent.VK_UP){
-			ash.andarCima();
-			ash.animar('u');
-		}
-		if (e.getKeyCode() == KeyEvent.VK_DOWN){
-			ash.andarBaixo();
-			ash.animar('d');
-		}
+			if (System.currentTimeMillis() - agora < 100)
+				return;
+		
+			agora = System.currentTimeMillis();
+			// Do your work here...
+			if (e.getKeyCode() == KeyEvent.VK_LEFT) {
+				ash.andarEsq();
+			}
+			if (e.getKeyCode() == KeyEvent.VK_RIGHT) {
+				ash.andarDir();
+			}
+			if (e.getKeyCode() == KeyEvent.VK_UP) {
+				ash.andarCima();
+			}
+			if (e.getKeyCode() == KeyEvent.VK_DOWN) {
+				ash.andarBaixo();
+			}
+
 		
 	}
 
 	@Override
 	public void keyReleased(KeyEvent e) {
-		// TODO Auto-generated method stub
-		
+
+		if (e.getKeyCode() == KeyEvent.VK_LEFT
+				|| e.getKeyCode() == KeyEvent.VK_RIGHT
+				|| e.getKeyCode() == KeyEvent.VK_UP
+				|| e.getKeyCode() == KeyEvent.VK_DOWN)
+			System.out.println("SOLTOU!");
+
+
 	}
 
 	@Override
 	public void keyTyped(KeyEvent e) {
 		// TODO Auto-generated method stub
-		
+
 	}
-	
-	
+
 }

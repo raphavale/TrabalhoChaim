@@ -8,10 +8,11 @@ import javax.swing.ImageIcon;
 
 public class Sprite {
 	
-	private final byte speed = 15; //Maior = mais lento
+	private final byte speed = 3; //Maior = mais lento
 	private final short width = 16;
 	private final short height = 32;
 	private final byte mspd = 10;
+	private final byte sleep_time = 10;
 	private short speed_control = 1;
 	private byte cena_atual = 1;
 	private ImageIcon spr[];
@@ -29,18 +30,69 @@ public class Sprite {
 		this.x = x;
 		this.y = y;
 	}
+
 	
 	public void andarEsq(){
-		x = x-mspd;
+		int i = 1;
+		animar('l');
+		while(i<mspd){
+			x = x-1;
+			i++;
+			try {
+				Thread.sleep(sleep_time);
+			} catch (InterruptedException e) {
+				// TODO Auto-generated catch block
+				e.printStackTrace();
+			}
+		}
+
 	}
-	public void andarDir(){
-		x = x+mspd;
+
+	public void andarDir() {
+
+		int i = 1;
+		animar('r');
+		try {
+			while (i < mspd) {
+				x = x + 1;
+				i++;
+
+				Thread.sleep(sleep_time);
+
+			}
+		} catch (InterruptedException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		} 
 	}
+
 	public void andarCima(){
-		y = y-mspd;
+		int i = 1;
+		animar('u');
+		while(i<mspd){
+			y = y-1;
+			i++;
+			try {
+				Thread.sleep(sleep_time);
+			} catch (InterruptedException e) {
+				// TODO Auto-generated catch block
+				e.printStackTrace();
+			}
+		}
 	}
 	public void andarBaixo(){
-		y = y+mspd;
+		int i = 1;
+		animar('d');
+		while(i<mspd){
+			y = y+1;
+			i++;
+			try {
+				Thread.sleep(sleep_time);
+			} catch (InterruptedException e) {
+				// TODO Auto-generated catch block
+				e.printStackTrace();
+			}
+		}
 	}
 
 	public void animar(char move){	
