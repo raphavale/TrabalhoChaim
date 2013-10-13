@@ -9,15 +9,15 @@ import javax.swing.ImageIcon;
 public class Sprite {
 	
 	private final byte speed = 3; //Maior = mais lento
-	private final short width = 16;
-	private final short height = 32;
-	private final byte mspd = 10;
-	private final byte sleep_time = 10;
+	public static final short width = 32;
+	public static final short height = 64;
+	private final byte mspd = 20;
+	private final byte sleep_time = 5;
 	private short speed_control = 1;
 	private byte cena_atual = 1;
 	private ImageIcon spr[];
-	private int x;
-	private int y;
+	private final int x;
+	private final int y;
 	private boolean started = false;
 	private char move_old;
 	
@@ -36,7 +36,7 @@ public class Sprite {
 		int i = 1;
 		animar('l');
 		while(i<mspd){
-			x = x-1;
+			Game.each.andar_esquerda();
 			i++;
 			try {
 				Thread.sleep(sleep_time);
@@ -54,7 +54,7 @@ public class Sprite {
 		animar('r');
 		try {
 			while (i < mspd) {
-				x = x + 1;
+				Game.each.andar_direita();
 				i++;
 
 				Thread.sleep(sleep_time);
@@ -70,7 +70,7 @@ public class Sprite {
 		int i = 1;
 		animar('u');
 		while(i<mspd){
-			y = y-1;
+			Game.each.andar_cima();
 			i++;
 			try {
 				Thread.sleep(sleep_time);
@@ -84,7 +84,7 @@ public class Sprite {
 		int i = 1;
 		animar('d');
 		while(i<mspd){
-			y = y+1;
+			Game.each.andar_baixo();
 			i++;
 			try {
 				Thread.sleep(sleep_time);
@@ -161,9 +161,7 @@ public class Sprite {
 	
 	public void desenharSprite(BufferedImage bi, Graphics g, char move, ImageObserver io) {
 		Graphics bbg = bi.getGraphics();
-		//animar(move);
 		bbg.drawImage(spr[cena_atual].getImage(), x, y, width, height, io);
-		g.drawImage(bi, 0, 0, io);
 	}
 	
 

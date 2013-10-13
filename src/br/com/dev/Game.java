@@ -3,6 +3,10 @@ package br.com.dev;
 import java.awt.event.KeyEvent;
 import java.awt.event.KeyListener;
 import java.awt.image.BufferedImage;
+
+
+
+
 import javax.swing.JFrame;
 
 public class Game extends JFrame implements KeyListener {
@@ -13,21 +17,24 @@ public class Game extends JFrame implements KeyListener {
 
 	BufferedImage backBuffer;
 	int FPS = 100;
-	int janelaW = 500;
-	int janelaH = 500;
+	public static int janelaW = 500;
+	public static int janelaH = 500;
 	Sprite ash;
+	public static Mapa each;
 	char teclaPressionada;
 
 	public void inicializar() {
-		setTitle("Titulo do Jogo!");
+		setTitle("Descontamine a EACH!");
+		setSize(janelaW, janelaH);
 		setResizable(false);
 		setDefaultCloseOperation(EXIT_ON_CLOSE);
-		setLayout(null);
+		setLocationRelativeTo(null);
 		setVisible(true);
-		setBounds(100, 100, janelaW, janelaH);
+		
 		backBuffer = new BufferedImage(janelaW, janelaH,
 				BufferedImage.TYPE_INT_RGB);
-
+		
+		each = new Mapa(janelaW,janelaH);
 		ash = new Sprite("andando", 250, 250);
 
 		addKeyListener(this);
@@ -37,11 +44,9 @@ public class Game extends JFrame implements KeyListener {
 		inicializar();
 		while (true) {
 			atualizar();
-			new Mapa().desenharMapa(backBuffer, getGraphics(), this);
+			each.desenharMapa(backBuffer, getGraphics(), this);
 			ash.desenharSprite(backBuffer, getGraphics(), 'u', this);
-			// ash.animarUp();
-			// ash.animar('u');
-
+			getGraphics().drawImage(backBuffer, 0, 0, this);
 			try {
 				Thread.sleep(1000 / FPS);
 			} catch (Exception e) {
@@ -62,32 +67,34 @@ public class Game extends JFrame implements KeyListener {
 	
 	private long agora = System.currentTimeMillis();
 	
-	@Override
 	public void keyPressed(KeyEvent e) {
 		// TODO Auto-generated method stub
 		
-			if (System.currentTimeMillis() - agora < 100)
+			if (System.currentTimeMillis() - agora < FPS)
 				return;
 		
 			agora = System.currentTimeMillis();
 			// Do your work here...
 			if (e.getKeyCode() == KeyEvent.VK_LEFT) {
 				ash.andarEsq();
+				each.andar_esquerda();
 			}
 			if (e.getKeyCode() == KeyEvent.VK_RIGHT) {
 				ash.andarDir();
+				each.andar_direita();
 			}
 			if (e.getKeyCode() == KeyEvent.VK_UP) {
 				ash.andarCima();
+				each.andar_cima();
 			}
 			if (e.getKeyCode() == KeyEvent.VK_DOWN) {
 				ash.andarBaixo();
+				each.andar_baixo();
 			}
 
 		
 	}
 
-	@Override
 	public void keyReleased(KeyEvent e) {
 
 		if (e.getKeyCode() == KeyEvent.VK_LEFT
@@ -102,7 +109,7 @@ public class Game extends JFrame implements KeyListener {
 	@Override
 	public void keyTyped(KeyEvent e) {
 		// TODO Auto-generated method stub
-
+		
 	}
 
 }
