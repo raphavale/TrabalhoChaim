@@ -3,9 +3,7 @@ package br.com.dev;
 import java.awt.event.KeyEvent;
 import java.awt.event.KeyListener;
 import java.awt.image.BufferedImage;
-
-
-
+import java.util.LinkedList;
 
 import javax.swing.JFrame;
 
@@ -15,12 +13,14 @@ public class Game extends JFrame implements KeyListener {
 	 * 
 	 */
 
+	public final int num_monstros = 10;
 	BufferedImage backBuffer;
 	int FPS = 100;
-	public static int janelaW = 500;
-	public static int janelaH = 500;
-	Sprite ash;
+	public static int janelaW = 1000;
+	public static int janelaH = 1000;
+	Player ash;
 	public static Mapa each;
+	public static LinkedList<Monstro> monstros = new LinkedList<Monstro>();
 	char teclaPressionada;
 
 	public void inicializar() {
@@ -35,8 +35,8 @@ public class Game extends JFrame implements KeyListener {
 				BufferedImage.TYPE_INT_RGB);
 		
 		each = new Mapa(janelaW,janelaH);
-		ash = new Sprite("andando", 250, 250);
-
+		ash = new Player("andando", 250, 250);
+		gerar_monstros(num_monstros);
 		addKeyListener(this);
 	}
 
@@ -45,6 +45,10 @@ public class Game extends JFrame implements KeyListener {
 		while (true) {
 			atualizar();
 			each.desenharMapa(backBuffer, getGraphics(), this);
+			
+			for (int i = 0; i<monstros.size(); i++)
+				monstros.get(i).desenharSprite(backBuffer, getGraphics(), this);
+			
 			ash.desenharSprite(backBuffer, getGraphics(), 'u', this);
 			getGraphics().drawImage(backBuffer, 0, 0, this);
 			try {
@@ -63,7 +67,18 @@ public class Game extends JFrame implements KeyListener {
 		Game game = new Game();
 		game.run();
 	}
-
+	
+	private void gerar_monstros(int n){
+		for (int i = 0; i<n;i++){
+			int x = (int) (Math.random()*each.getWidth() + each.desloc_x);
+			int y = (int) (Math.random()*each.getHeight() + each.desloc_y);
+			
+			//test edges.
+			
+			monstros.add(new Monstro(x,y));
+			System.out.println("Mob" + i + ":\n\tX = " + x + "\n\tY = " + y);
+		}
+	}
 	
 	private long agora = System.currentTimeMillis();
 	
@@ -81,7 +96,8 @@ public class Game extends JFrame implements KeyListener {
 			}
 			if (e.getKeyCode() == KeyEvent.VK_RIGHT) {
 				ash.andarDir();
-				each.andar_direita();
+				each.andar_direita();			
+			
 			}
 			if (e.getKeyCode() == KeyEvent.VK_UP) {
 				ash.andarCima();
@@ -101,7 +117,7 @@ public class Game extends JFrame implements KeyListener {
 				|| e.getKeyCode() == KeyEvent.VK_RIGHT
 				|| e.getKeyCode() == KeyEvent.VK_UP
 				|| e.getKeyCode() == KeyEvent.VK_DOWN)
-			System.out.println("SOLTOU!");
+			System.out.print("");
 
 
 	}
@@ -111,5 +127,7 @@ public class Game extends JFrame implements KeyListener {
 		// TODO Auto-generated method stub
 		
 	}
+	
+	
 
 }

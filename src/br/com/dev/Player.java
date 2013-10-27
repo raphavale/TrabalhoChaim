@@ -6,7 +6,7 @@ import java.awt.image.ImageObserver;
 
 import javax.swing.ImageIcon;
 
-public class Sprite {
+public class Player {
 	
 	private final byte speed = 3; //Maior = mais lento
 	public static final short width = 32;
@@ -22,10 +22,10 @@ public class Sprite {
 	private char move_old;
 	
 	
-	Sprite(String velocidade, int x, int y){
+	Player(String velocidade, int x, int y){
 		spr = new ImageIcon[12];
 		for (int i = 0; i < spr.length; i++ ){
-			spr[i] = new ImageIcon("src/img/char/" + velocidade + "_" + i + ".png"); 
+			spr[i] = new ImageIcon("src/img/char/pers/" + velocidade + "_" + i + ".png"); 
 		}
 		this.x = x;
 		this.y = y;
@@ -37,6 +37,8 @@ public class Sprite {
 		animar('l');
 		while(i<mspd){
 			Game.each.andar_esquerda();
+			for(int j = 0; j<Game.monstros.size(); j++)
+				Game.monstros.get(j).andar_esquerda();
 			i++;
 			try {
 				Thread.sleep(sleep_time);
@@ -55,6 +57,8 @@ public class Sprite {
 		try {
 			while (i < mspd) {
 				Game.each.andar_direita();
+				for(int j = 0; j<Game.monstros.size(); j++)
+					Game.monstros.get(j).andar_direita();
 				i++;
 
 				Thread.sleep(sleep_time);
@@ -71,6 +75,8 @@ public class Sprite {
 		animar('u');
 		while(i<mspd){
 			Game.each.andar_cima();
+			for(int j = 0; j<Game.monstros.size(); j++)
+				Game.monstros.get(j).andar_cima();
 			i++;
 			try {
 				Thread.sleep(sleep_time);
@@ -85,6 +91,8 @@ public class Sprite {
 		animar('d');
 		while(i<mspd){
 			Game.each.andar_baixo();
+			for(int j = 0; j<Game.monstros.size(); j++)
+				Game.monstros.get(j).andar_baixo();
 			i++;
 			try {
 				Thread.sleep(sleep_time);
