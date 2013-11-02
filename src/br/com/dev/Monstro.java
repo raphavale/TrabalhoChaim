@@ -8,6 +8,7 @@ import javax.swing.ImageIcon;
 
 public class Monstro {
 
+	private int vida = 9;
 	public static final short width = 60;
 	public static final short height = 60;
 	private byte cena_atual = 0;
@@ -16,7 +17,7 @@ public class Monstro {
 	private int y;
 	private long time = System.currentTimeMillis();
 
-	Monstro(int x, int y) {
+	Monstro(int x, int y, int level) {
 		spr = new ImageIcon[4];
 		for (int i = 0; i < spr.length; i++) {
 			spr[i] = new ImageIcon("src/img/char/monstro/grimmer_" + (i + 1)
@@ -24,6 +25,7 @@ public class Monstro {
 		}
 		this.x = x;
 		this.y = y;
+		this.vida *= level;
 	}
 
 	public void desenharSprite(BufferedImage bi, Graphics g, ImageObserver io) {
@@ -47,6 +49,22 @@ public class Monstro {
 
 	}
 
+	public int getX(){
+		return this.x;
+	}
+	public int getY(){
+		return this.y;
+	}
+	public int getVida(){
+		return vida;
+	}
+	//Retorna true se o mob morreu.
+	public boolean tomar_dano(Player p){
+		vida = vida-p.getPoderAtaque();
+		if (vida<0)
+			return true;
+		return false;
+	}
 	// 'andar' com o mapa
 	void andar_direita() {
 		x--;
@@ -54,11 +72,9 @@ public class Monstro {
 	void andar_esquerda() {
 		x++;
 	}
-
 	void andar_cima() {
 		y++;
 	}
-
 	void andar_baixo() {
 		y--;
 	}

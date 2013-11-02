@@ -13,7 +13,7 @@ public class Game extends JFrame implements KeyListener {
 	 * 
 	 */
 
-	public final int num_monstros = 10;
+	public final int num_monstros = 1;
 	BufferedImage backBuffer;
 	int FPS = 100;
 	public static int janelaW = 1000;
@@ -36,7 +36,7 @@ public class Game extends JFrame implements KeyListener {
 		
 		each = new Mapa(janelaW,janelaH);
 		ash = new Player("andando", 250, 250);
-		gerar_monstros(num_monstros);
+		gerar_monstros(num_monstros, 1);
 		addKeyListener(this);
 	}
 
@@ -60,7 +60,7 @@ public class Game extends JFrame implements KeyListener {
 	}
 
 	public void atualizar() {
-
+			limpa_monstros();
 	}
 
 	public static void main(String[] args) {
@@ -68,16 +68,52 @@ public class Game extends JFrame implements KeyListener {
 		game.run();
 	}
 	
-	private void gerar_monstros(int n){
+	private void gerar_monstros(int n, int lvl){
 		for (int i = 0; i<n;i++){
 			int x = (int) (Math.random()*each.getWidth() + each.desloc_x);
 			int y = (int) (Math.random()*each.getHeight() + each.desloc_y);
 			
 			//test edges.
 			
-			monstros.add(new Monstro(x,y));
-			System.out.println("Mob" + i + ":\n\tX = " + x + "\n\tY = " + y);
+			monstros.add(new Monstro(x,y, lvl));
 		}
+	}
+	
+	private void limpa_monstros(){
+		for (int i = 0; i < monstros.size(); i++) {
+			if(monstros.get(i).getVida() < 0){
+				monstros.remove(i);
+				i--;
+			}
+		}
+	}
+	
+	public LinkedList<Monstro> mostros_perto() {
+		//Procura monstros na frente do mob (em 2*player.height * player.width) e add num vetor
+		LinkedList<Monstro> m = new LinkedList<Monstro>();
+		
+		int indice_lista = 0;
+		Monstro temp;
+		while (indice_lista < monstros.size()){
+			
+			temp = monstros.get(indice_lista);
+			
+			if ((temp.getX() > (ash.getX())) && (temp.getX() < (ash.getX() + (Player.width * 1.5))) ){
+				//está dentro do width. Testando height:
+				if ( (temp.getY() > (ash.getY() - (0.5*Player.height))) && (temp.getY() < (ash.getY() + (0.5 * Player.height))) ) {
+					//Dentro do range definido. Adicionar no array		
+					m.add(temp);
+				}
+				
+			}			
+			
+			System.out.println("\nX Maior que " + (ash.getX()) + " menor que " + (ash.getX() + (Player.width * 1.5)));
+			System.out.println("Y Maior que " + (ash.getY() - (0.5*Player.height)) + " menor que " + (ash.getY() + (0.5 * Player.height)));
+			indice_lista++;
+		}
+
+		
+		return m;
 	}
 	
 	private long agora = System.currentTimeMillis();
@@ -107,6 +143,11 @@ public class Game extends JFrame implements KeyListener {
 				ash.andarBaixo();
 				each.andar_baixo();
 			}
+			
+			if (e.getKeyCode() == KeyEvent.VK_A) {
+				imprimeMonstros();
+				ash.atacar(mostros_perto(), ash);
+			}
 
 		
 	}
@@ -129,5 +170,11 @@ public class Game extends JFrame implements KeyListener {
 	}
 	
 	
-
+	public void imprimeMonstros(){
+		for (int i  = 0; i < monstros.size(); i++){
+			System.out.println("X:" + monstros.get(i).getX() + "\tASH X:" + ash.getX() 
+							+ "\nY:" + monstros.get(i).getY() + "\tASH Y:" + ash.getY() 
+							+ "\nVida:" + monstros.get(i).getVida());
+		}
+	}
 }

@@ -3,6 +3,7 @@ package br.com.dev;
 import java.awt.Graphics;
 import java.awt.image.BufferedImage;
 import java.awt.image.ImageObserver;
+import java.util.LinkedList;
 
 import javax.swing.ImageIcon;
 
@@ -20,7 +21,7 @@ public class Player {
 	private final int y;
 	private boolean started = false;
 	private char move_old;
-	
+	private int poder_ataque = 3;
 	
 	Player(String velocidade, int x, int y){
 		spr = new ImageIcon[12];
@@ -31,7 +32,31 @@ public class Player {
 		this.y = y;
 	}
 
+	public char getFrente(){
+		if (cena_atual == 4)
+			return 'u';
+		if (cena_atual == 7)
+			return 'l';
+		if (cena_atual == 10)
+			return 'r';
+		
+		return 'd';
+	}
 	
+	public int getX(){
+		return this.x;
+	}
+	public int getY(){
+		return this.y;
+	}
+	
+	public int getPoderAtaque(){
+		return poder_ataque;
+	}
+	
+	public void pegar_bonus(){
+		poder_ataque++;
+	}
 	public void andarEsq(){
 		int i = 1;
 		animar('l');
@@ -173,7 +198,10 @@ public class Player {
 	}
 	
 
-	
+	public void atacar(LinkedList<Monstro> m, Player p){
+		for (int i = 0; i < m.size(); i++)
+			m.get(i).tomar_dano(p);
+	}
 	
 	
 }
