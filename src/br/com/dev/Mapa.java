@@ -33,13 +33,15 @@ public class Mapa {
 	}
 
 	public boolean andar_direita() {
-		if((Math.abs(desloc_x)+(Game.janelaW/2) + Player.width) > fundo.getIconWidth())
+		
+		if((Math.abs(desloc_x)+(Game.janelaW/2) + Player.width) > fundo.getIconWidth() & desloc_x < 0)
 			return false;
 		desloc_x--;
 		return true;
 	}
 
 	public boolean andar_esquerda() {
+		
 		if((desloc_x) > Game.janelaW/2 - (Player.width/3))
 			return false;
 		desloc_x++;
@@ -54,7 +56,7 @@ public class Mapa {
 	}
 
 	public boolean andar_baixo() {
-		if((Math.abs(desloc_y)+(Game.janelaH/2) + (Player.height)) > fundo.getIconHeight())
+		if((Math.abs(desloc_y)+(Game.janelaH/2) + (Player.height)) > fundo.getIconHeight() & desloc_y < 0)
 			return false;
 		desloc_y--;
 		return true;

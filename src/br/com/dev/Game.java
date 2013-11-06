@@ -35,7 +35,7 @@ public class Game extends JFrame implements KeyListener {
 				BufferedImage.TYPE_INT_RGB);
 		
 		each = new Mapa(janelaW,janelaH);
-		ash = new Player("andando", 250, 250);
+		ash = new Player("andando", (janelaW/2), (janelaH/2));
 		gerar_monstros(num_monstros, 1);
 		addKeyListener(this);
 	}
@@ -49,7 +49,7 @@ public class Game extends JFrame implements KeyListener {
 			for (int i = 0; i<monstros.size(); i++)
 				monstros.get(i).desenharSprite(backBuffer, getGraphics(), this);
 			
-			ash.desenharSprite(backBuffer, getGraphics(), 'u', this);
+			ash.desenharSprite(backBuffer, getGraphics(), this);
 			getGraphics().drawImage(backBuffer, 0, 0, this);
 			try {
 				Thread.sleep(1000 / FPS);
@@ -107,8 +107,8 @@ public class Game extends JFrame implements KeyListener {
 				
 			}			
 			
-			System.out.println("\nX Maior que " + (ash.getX()) + " menor que " + (ash.getX() + (Player.width * 1.5)));
-			System.out.println("Y Maior que " + (ash.getY() - (0.5*Player.height)) + " menor que " + (ash.getY() + (0.5 * Player.height)));
+			//System.out.println("\nX Maior que " + (ash.getX()) + " menor que " + (ash.getX() + (Player.width * 1.5)));
+			//System.out.println("Y Maior que " + (ash.getY() - (0.5*Player.height)) + " menor que " + (ash.getY() + (0.5 * Player.height)));
 			indice_lista++;
 		}
 
@@ -145,7 +145,7 @@ public class Game extends JFrame implements KeyListener {
 			}
 			
 			if (e.getKeyCode() == KeyEvent.VK_A) {
-				imprimeMonstros();
+				//imprimeMonstros();
 				ash.atacar(mostros_perto(), ash);
 			}
 
