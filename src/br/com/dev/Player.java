@@ -29,27 +29,25 @@ public class Player {
 	private long _t = System.currentTimeMillis();
 	private boolean time_changed = false;
 	
-	Player(String velocidade, int x, int y){
+	public Player(int x, int y){
 		spr = new ImageIcon[12];
 		atk = new ImageIcon[4];
 		for (int i = 0; i < spr.length; i++ ){
 			if(i<4)
 				atk[i] = new ImageIcon("src/img/char/pers/atk_" + i + ".png");
-			spr[i] = new ImageIcon("src/img/char/pers/" + velocidade + "_" + i + ".png"); 
+			spr[i] = new ImageIcon("src/img/char/pers/andando_" + i + ".png"); 
 		}
 		this.x = x;
 		this.y = y;
 	}
 
 	public char getFrente(){
-		if (cena_atual == 4)
-			return 'u';
-		if (cena_atual == 7)
-			return 'l';
-		if (cena_atual == 10)
-			return 'r';
+		if (cena_atual < 3) return 'd';
+		else if (cena_atual < 6) return 'u';
+		else if (cena_atual < 9) return 'l';
+		else if (cena_atual < 12) return 'r';
 		
-		return 'd';
+		return '0';
 	}
 	
 	public int getX(){
@@ -58,7 +56,7 @@ public class Player {
 	public int getY(){
 		return this.y;
 	}
-	
+	public int getCenaAtual() { return cena_atual; } 
 	public int getPoderAtaque(){
 		return poder_ataque;
 	}

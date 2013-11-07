@@ -13,7 +13,7 @@ public class Mapa {
 	
 	ImageIcon fundo;
 
-	Mapa(int w, int h) {
+	public Mapa(int w, int h) {
 		fundo = new ImageIcon("src/img/mapa_each.png");
 		desloc_x = -1 * ((fundo.getIconWidth() / 2) - (w / 2));
 		desloc_y = -1 * ((fundo.getIconHeight() / 2) - (h / 2));

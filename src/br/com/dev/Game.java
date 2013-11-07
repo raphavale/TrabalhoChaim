@@ -35,7 +35,7 @@ public class Game extends JFrame implements KeyListener {
 				BufferedImage.TYPE_INT_RGB);
 		
 		each = new Mapa(janelaW,janelaH);
-		ash = new Player("andando", (janelaW/2), (janelaH/2));
+		ash = new Player((janelaW/2), (janelaH/2));
 		gerar_monstros(num_monstros, 1);
 		addKeyListener(this);
 	}

@@ -40,8 +40,6 @@ public class Monstro {
 			return;
 		}
 
-		// se já faz mais de um segundo, faz a ação
-
 		if (cena_atual % 2 == 1)
 			cena_atual--;
 		else
