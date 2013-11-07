@@ -13,7 +13,7 @@ public class Game extends JFrame implements KeyListener {
 	 * 
 	 */
 
-	public final int num_monstros = 1;
+	public final int num_monstros = 5;
 	BufferedImage backBuffer;
 	int FPS = 100;
 	public static int janelaW = 1000;
