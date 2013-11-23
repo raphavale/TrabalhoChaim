@@ -233,7 +233,7 @@ public class Player {
 				time_changed = true;
 			}
 			
-			if (System.currentTimeMillis() - _t > 200){
+			if (System.currentTimeMillis() - _t > 400){
 				_t = System.currentTimeMillis();
 				isAtacking = false;
 				duringAtack = false;

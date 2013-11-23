@@ -8,7 +8,7 @@ import javax.swing.ImageIcon;
 
 public class Monstro {
 
-	private int vida = 9;
+	private int vida = 3;
 	public static final short width = 60;
 	public static final short height = 60;
 	private byte cena_atual = 0;
@@ -16,20 +16,33 @@ public class Monstro {
 	private int x;
 	private int y;
 	private long time = System.currentTimeMillis();
-
-	Monstro(int x, int y, int level) {
-		spr = new ImageIcon[4];
-		for (int i = 0; i < spr.length; i++) {
-			spr[i] = new ImageIcon("src/img/char/monstro/grimmer_" + (i + 1)
-					+ ".png");
+	
+	Monstro(int x, int y, int level, boolean is_chefe) {
+		if(is_chefe)
+		{
+			spr = new ImageIcon[4];
+			for (int i = 0; i < spr.length; i++) {
+				spr[i] = new ImageIcon("src/img/char/monstro/boss_" + (i + 1)
+						+ ".png");
+			}
+			this.x = x;
+			this.y = y;
+			this.vida *= level*10;
+		} 
+		else {
+			spr = new ImageIcon[4];
+			for (int i = 0; i < spr.length; i++) {
+				spr[i] = new ImageIcon("src/img/char/monstro/grimmer_" + (i + 1)
+						+ ".png");
+			}
+			this.x = x;
+			this.y = y;
+			this.vida *= level;
 		}
-		this.x = x;
-		this.y = y;
-		this.vida *= level;
 	}
 
 	public void desenharSprite(BufferedImage bi, Graphics g, ImageObserver io) {
-		Graphics bbg = bi.getGraphics();
+		Graphics bbg = bi.getGraphics();		
 		bbg.drawImage(spr[cena_atual].getImage(), x, y, width, height, io);
 	}
 
@@ -58,6 +71,11 @@ public class Monstro {
 	}
 	//Retorna true se o mob morreu.
 	public boolean tomar_dano(Player p){
+		long t = System.currentTimeMillis();
+		x = x+10;
+		while ( System.currentTimeMillis() < t + 200 );
+		x = x-10;
+		
 		vida = vida-p.getPoderAtaque();
 		if (vida<0)
 			return true;
