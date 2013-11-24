@@ -1,43 +1,94 @@
 package br.com.dev;
 
+import java.applet.Applet;
+import java.applet.AudioClip;
 import java.awt.event.KeyEvent;
 import java.awt.event.KeyListener;
 import java.awt.image.BufferedImage;
+import java.io.File;
+import java.net.MalformedURLException;
+import java.net.URL;
 import java.util.LinkedList;
+import java.util.Timer;
+import java.util.TimerTask;
+
+
 
 import javax.swing.JFrame;
-
+	
 public class Game extends JFrame implements KeyListener {
 	private static final long serialVersionUID = -7556221553607586976L;
 	/**
 	 * 
 	 */
-
-	public final int num_monstros = 1;
-	BufferedImage backBuffer;
+	
+	Game(){
+		try {
+			bgMusic = Applet.newAudioClip((new File("src/midi/mario1.mid").toURI().toURL()));
+			menuMusic = Applet.newAudioClip((new File("src/midi/menu.mid").toURI().toURL()));
+		} catch (MalformedURLException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
+	}
+	
+	public final int num_monstros = 5;
+	public AudioClip bgMusic, menuMusic; 
+	public final int max_monstros = 30;
+	public int lvl_monstros = 1;
+	public final int tempo_spawn = 5000; //tempo para um novo monstro nascer, em milisegundos
+	static BufferedImage backBuffer;
 	int FPS = 100;
-	public static int janelaW = 1000;
-	public static int janelaH = 1000;
+	int _ATK_DELAY = 700;
+	public static int janelaW = 640;
+	public static int janelaH = 426;
 	Player ash;
 	public static Mapa each;
 	public static LinkedList<Monstro> monstros = new LinkedList<Monstro>();
 	char teclaPressionada;
+	
 
 	public void inicializar() {
+		
+		addKeyListener(this);
 		setTitle("Descontamine a EACH!");
 		setSize(janelaW, janelaH);
 		setResizable(false);
 		setDefaultCloseOperation(EXIT_ON_CLOSE);
 		setLocationRelativeTo(null);
 		setVisible(true);
-		
 		backBuffer = new BufferedImage(janelaW, janelaH,
 				BufferedImage.TYPE_INT_RGB);
+		long t = 0, a = System.currentTimeMillis();
+		boolean continua = true;
 		
+		menuMusic.loop();
+		while(continua_intro()){
+			Intro i = new Intro(janelaW, janelaH);
+			//Introdução
+			// A cada 0.005 segundo, aumenta a var T, fazendo o banner abaixar
+			if (System.currentTimeMillis() > a + 5 && continua ){
+				a = System.currentTimeMillis();
+				t++;
+			}
+	        
+			i.desenharIntro(backBuffer, getGraphics(), this, t); 
+			getGraphics().drawImage(backBuffer, 0, 0, this);			
+		}
+		
+		menuMusic.stop();
+		bgMusic.loop();
 		each = new Mapa(janelaW,janelaH);
-		ash = new Player("andando", 250, 250);
+		ash = new Player((janelaW/2), (janelaH/2));
 		gerar_monstros(num_monstros, 1);
-		addKeyListener(this);
+		
+		set_timers();
+	}
+
+	boolean continua_intro = true;
+	private boolean continua_intro() {
+		// TODO Auto-generated method stub
+		return continua_intro;
 	}
 
 	public void run() {
@@ -49,7 +100,7 @@ public class Game extends JFrame implements KeyListener {
 			for (int i = 0; i<monstros.size(); i++)
 				monstros.get(i).desenharSprite(backBuffer, getGraphics(), this);
 			
-			ash.desenharSprite(backBuffer, getGraphics(), 'u', this);
+			ash.desenharSprite(backBuffer, getGraphics(), this);
 			getGraphics().drawImage(backBuffer, 0, 0, this);
 			try {
 				Thread.sleep(1000 / FPS);
@@ -75,7 +126,7 @@ public class Game extends JFrame implements KeyListener {
 			
 			//test edges.
 			
-			monstros.add(new Monstro(x,y, lvl));
+			monstros.add(new Monstro(x,y, lvl,false));
 		}
 	}
 	
@@ -85,6 +136,16 @@ public class Game extends JFrame implements KeyListener {
 				monstros.remove(i);
 				i--;
 			}
+		}
+	}
+
+	private void gerar_chefe(int n, int lvl){
+		for (int i = 0; i<n;i++){
+			int x = (int) (Math.random()*each.getWidth() + each.desloc_x);
+			int y = (int) (Math.random()*each.getHeight() + each.desloc_y);
+						
+			monstros.add(new Monstro(x,y,lvl,true));
+			lvl_monstros++;
 		}
 	}
 	
@@ -107,8 +168,8 @@ public class Game extends JFrame implements KeyListener {
 				
 			}			
 			
-			System.out.println("\nX Maior que " + (ash.getX()) + " menor que " + (ash.getX() + (Player.width * 1.5)));
-			System.out.println("Y Maior que " + (ash.getY() - (0.5*Player.height)) + " menor que " + (ash.getY() + (0.5 * Player.height)));
+			//System.out.println("\nX Maior que " + (ash.getX()) + " menor que " + (ash.getX() + (Player.width * 1.5)));
+			//System.out.println("Y Maior que " + (ash.getY() - (0.5*Player.height)) + " menor que " + (ash.getY() + (0.5 * Player.height)));
 			indice_lista++;
 		}
 
@@ -116,15 +177,17 @@ public class Game extends JFrame implements KeyListener {
 		return m;
 	}
 	
-	private long agora = System.currentTimeMillis();
+	private long mov_delay = System.currentTimeMillis();
+	private long atk_delay = System.currentTimeMillis();
 	
 	public void keyPressed(KeyEvent e) {
 		// TODO Auto-generated method stub
 		
-			if (System.currentTimeMillis() - agora < FPS)
-				return;
-		
-			agora = System.currentTimeMillis();
+		if (System.currentTimeMillis() - mov_delay < FPS)
+			return;
+		else {
+
+			mov_delay = System.currentTimeMillis();
 			// Do your work here...
 			if (e.getKeyCode() == KeyEvent.VK_LEFT) {
 				ash.andarEsq();
@@ -132,8 +195,8 @@ public class Game extends JFrame implements KeyListener {
 			}
 			if (e.getKeyCode() == KeyEvent.VK_RIGHT) {
 				ash.andarDir();
-				each.andar_direita();			
-			
+				each.andar_direita();
+
 			}
 			if (e.getKeyCode() == KeyEvent.VK_UP) {
 				ash.andarCima();
@@ -143,12 +206,23 @@ public class Game extends JFrame implements KeyListener {
 				ash.andarBaixo();
 				each.andar_baixo();
 			}
-			
-			if (e.getKeyCode() == KeyEvent.VK_A) {
-				imprimeMonstros();
+		}
+		
+		if (e.getKeyCode() == KeyEvent.VK_A) {
+			if (System.currentTimeMillis() - atk_delay < _ATK_DELAY)
+				return;
+			else {
+				atk_delay = System.currentTimeMillis();
+				mov_delay = System.currentTimeMillis() + _ATK_DELAY;
+
+				// imprimeMonstros();
+				playAudio("src\\midi\\knife_stab.wav");
 				ash.atacar(mostros_perto(), ash);
 			}
-
+		}
+		
+		if (e.getKeyCode() == KeyEvent.VK_ENTER)
+			continua_intro = false;
 		
 	}
 
@@ -176,5 +250,55 @@ public class Game extends JFrame implements KeyListener {
 							+ "\nY:" + monstros.get(i).getY() + "\tASH Y:" + ash.getY() 
 							+ "\nVida:" + monstros.get(i).getVida());
 		}
+	}
+
+	
+	public void loopAudio(String s){
+		URL u;
+		try {
+			u = new File(s).toURI().toURL();
+			Applet.newAudioClip(u).loop();
+			//System.out.println(u.toString());
+		} catch (MalformedURLException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
+		
+	}
+	
+	public void playAudio(String s){
+		URL u;
+		try {
+			u = new File(s).toURI().toURL();
+			Applet.newAudioClip(u).play();
+			//System.out.println(u.toString());
+		} catch (MalformedURLException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
+		
+	}
+
+	
+	private void set_timers()
+	{
+		Timer timer_monstros = new Timer();
+        timer_monstros.schedule(new TimerTask() {
+            @Override
+            public void run() {
+                gerar_monstros(1, lvl_monstros);
+            }
+        }, tempo_spawn, tempo_spawn);
+        
+
+        Timer timer_chefe = new Timer();
+        timer_chefe.schedule(new TimerTask() {
+            @Override
+            public void run() {
+                gerar_chefe(1, lvl_monstros);
+            }
+        }, tempo_spawn*5, tempo_spawn*5);
+   
+		
 	}
 }
