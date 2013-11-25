@@ -3,6 +3,7 @@ package br.com.dev;
 import java.awt.Graphics;
 import java.awt.image.BufferedImage;
 import java.awt.image.ImageObserver;
+import java.util.Random;
 
 import javax.swing.ImageIcon;
 
@@ -16,8 +17,10 @@ public class Monstro {
 	private int x;
 	private int y;
 	private long time = System.currentTimeMillis();
+	private boolean is_chefe;
 	
 	Monstro(int x, int y, int level, boolean is_chefe) {
+		this.is_chefe = is_chefe;
 		if(is_chefe)
 		{
 			spr = new ImageIcon[4];
@@ -77,8 +80,17 @@ public class Monstro {
 		x = x-10;
 		
 		vida = vida-p.getPoderAtaque();
-		if (vida<0)
+		if (vida<0){
+			if (this.is_chefe)
+				Game.pontos+=500;
+			else
+				Game.pontos+=100;
+			Random x = new Random();
+			if (x.nextInt(100) < 5){
+				p.pegar_bonus();
+			}
 			return true;
+		}
 		return false;
 	}
 	// 'andar' com o mapa

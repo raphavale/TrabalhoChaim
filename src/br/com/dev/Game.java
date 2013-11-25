@@ -2,6 +2,9 @@ package br.com.dev;
 
 import java.applet.Applet;
 import java.applet.AudioClip;
+import java.awt.Color;
+import java.awt.Font;
+import java.awt.Graphics;
 import java.awt.event.KeyEvent;
 import java.awt.event.KeyListener;
 import java.awt.image.BufferedImage;
@@ -11,8 +14,6 @@ import java.net.URL;
 import java.util.LinkedList;
 import java.util.Timer;
 import java.util.TimerTask;
-
-
 
 import javax.swing.JFrame;
 	
@@ -43,6 +44,8 @@ public class Game extends JFrame implements KeyListener {
 	public static int janelaW = 640;
 	public static int janelaH = 426;
 	Player ash;
+	int time_elapsed = 0;
+	public static int pontos = 0;
 	public static Mapa each;
 	public static LinkedList<Monstro> monstros = new LinkedList<Monstro>();
 	char teclaPressionada;
@@ -102,6 +105,12 @@ public class Game extends JFrame implements KeyListener {
 			
 			ash.desenharSprite(backBuffer, getGraphics(), this);
 			getGraphics().drawImage(backBuffer, 0, 0, this);
+			Font myFont = new Font("Courier", Font.BOLD ,50);
+			Graphics g = getGraphics();
+			g.setFont(myFont);
+			g.setColor(Color.RED);
+			g.drawString("Pontos:"+pontos, 10 , 60);
+			g.drawString("Tempo:"+time_elapsed, 350, 60);
 			try {
 				Thread.sleep(1000 / FPS);
 			} catch (Exception e) {
@@ -282,6 +291,8 @@ public class Game extends JFrame implements KeyListener {
 	
 	private void set_timers()
 	{
+		time_elapsed = 0;
+		pontos = 0;
 		Timer timer_monstros = new Timer();
         timer_monstros.schedule(new TimerTask() {
             @Override
@@ -298,7 +309,15 @@ public class Game extends JFrame implements KeyListener {
                 gerar_chefe(1, lvl_monstros);
             }
         }, tempo_spawn*5, tempo_spawn*5);
-   
-		
+
+        Timer timer_geral = new Timer();
+        timer_chefe.schedule(new TimerTask() {
+            @Override
+            public void run() {
+            	System.out.println(time_elapsed++);
+            }
+        }, 1000, 1000);
+
+        
 	}
 }

@@ -4,6 +4,8 @@ import java.awt.Graphics;
 import java.awt.image.BufferedImage;
 import java.awt.image.ImageObserver;
 import java.util.LinkedList;
+import java.util.Timer;
+import java.util.TimerTask;
 
 import javax.swing.ImageIcon;
 
@@ -62,7 +64,14 @@ public class Player {
 	}
 	
 	public void pegar_bonus(){
+		Timer timer_geral = new Timer();
 		poder_ataque++;
+		timer_geral.schedule(new TimerTask() {
+            @Override
+            public void run() {
+                poder_ataque--;
+            }
+        }, 10000);
 	}
 	public void andarEsq(){
 		int i = 1;
@@ -248,6 +257,7 @@ public class Player {
 			
 		} else {
 			bbg.drawImage(spr[cena_atual].getImage(), x, y, width, height, io);
+			System.out.println("andando_"+cena_atual);
 		}
 		
 	}
