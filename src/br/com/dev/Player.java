@@ -257,7 +257,6 @@ public class Player {
 			
 		} else {
 			bbg.drawImage(spr[cena_atual].getImage(), x, y, width, height, io);
-			System.out.println("andando_"+cena_atual);
 		}
 		
 	}

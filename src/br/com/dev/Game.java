@@ -11,6 +11,7 @@ import java.awt.image.BufferedImage;
 import java.io.File;
 import java.net.MalformedURLException;
 import java.net.URL;
+import java.util.ArrayList;
 import java.util.LinkedList;
 import java.util.Timer;
 import java.util.TimerTask;
@@ -49,6 +50,7 @@ public class Game extends JFrame implements KeyListener {
 	public static Mapa each;
 	public static LinkedList<Monstro> monstros = new LinkedList<Monstro>();
 	char teclaPressionada;
+	public static ArrayList<Timer> timers = new ArrayList<Timer>();
 	
 
 	public void inicializar() {
@@ -111,6 +113,10 @@ public class Game extends JFrame implements KeyListener {
 			g.setColor(Color.RED);
 			g.drawString("Pontos:"+pontos, 10 , 60);
 			g.drawString("Tempo:"+time_elapsed, 350, 60);
+			Font myFont2 = new Font("Courier", Font.BOLD ,20);
+			g.setFont(myFont2);
+			g.setColor(Color.BLUE);
+			g.drawString("Para recomeçar aperte R", 20, 400);
 			try {
 				Thread.sleep(1000 / FPS);
 			} catch (Exception e) {
@@ -145,6 +151,13 @@ public class Game extends JFrame implements KeyListener {
 				monstros.remove(i);
 				i--;
 			}
+		}
+	}
+	
+	private void limpa_mapa(){
+		for (int i = 0; i < monstros.size(); i++) {
+				monstros.remove(i);
+				i--;
 		}
 	}
 
@@ -233,6 +246,14 @@ public class Game extends JFrame implements KeyListener {
 		if (e.getKeyCode() == KeyEvent.VK_ENTER)
 			continua_intro = false;
 		
+		if (e.getKeyCode() == KeyEvent.VK_R && !continua_intro){
+			limpa_mapa();
+			for (Timer timer : timers) {
+				timer.cancel();
+			}
+			inicializar();
+		}
+		
 	}
 
 	public void keyReleased(KeyEvent e) {
@@ -314,9 +335,13 @@ public class Game extends JFrame implements KeyListener {
         timer_chefe.schedule(new TimerTask() {
             @Override
             public void run() {
-            	System.out.println(time_elapsed++);
+            	time_elapsed++;
             }
         }, 1000, 1000);
+        
+        timers.add(timer_monstros);
+        timers.add(timer_chefe);
+        timers.add(timer_geral);
 
         
 	}
