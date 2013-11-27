@@ -123,7 +123,7 @@ public class Game extends JFrame implements KeyListener {
 			g.setColor(Color.BLUE);
 			g.drawString("Para recomeçar aperte R", 20, 400);
 			if(contaminacao < 25)
-				g.setColor(Color.BLACK);
+				g.setColor(Color.CYAN);
 			else if(contaminacao < 50)
 				g.setColor(Color.ORANGE);
 			else
