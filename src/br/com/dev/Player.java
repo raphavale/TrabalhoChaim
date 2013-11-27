@@ -24,7 +24,7 @@ public class Player {
 	private final int y;
 	private boolean started = false;
 	private char move_old;
-	private int poder_ataque = 3;
+	public int poder_ataque = 3;
 	private boolean isAtacking = false;
 	private boolean duringAtack = false;
 	private boolean midstep = false;

@@ -34,7 +34,9 @@ public class PlayerTests {
 
 	@Test
 	public void testPegar_bonus() {
-		fail("Not yet implemented");
+		int poderInicial = p.poder_ataque;
+		p.pegar_bonus();
+		assertNotEquals(poderInicial, p.poder_ataque);
 	}
 
 	@Test

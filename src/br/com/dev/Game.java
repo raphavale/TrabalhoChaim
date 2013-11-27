@@ -56,6 +56,7 @@ public class Game extends JFrame implements KeyListener {
 	static int xd;
 	static int yd;
 	static int cdano;
+	public boolean ingame = true;
 
 	public void inicializar() {
 		
@@ -122,9 +123,9 @@ public class Game extends JFrame implements KeyListener {
 			g.setColor(Color.BLUE);
 			g.drawString("Para recomeçar aperte R", 20, 400);
 			if(contaminacao < 25)
-				g.setColor(Color.GREEN);
+				g.setColor(Color.BLACK);
 			else if(contaminacao < 50)
-				g.setColor(Color.YELLOW);
+				g.setColor(Color.ORANGE);
 			else
 				g.setColor(Color.RED);
 			
@@ -134,6 +135,16 @@ public class Game extends JFrame implements KeyListener {
 				g.setColor(Color.RED);
 				g.drawString(Integer.toString(dano), xd, yd);
 				cdano--;
+			}
+			
+			if(contaminacao >= 100){
+				for (Timer timer : timers) {
+					timer.cancel();
+				}
+				g.setColor(Color.BLUE);
+				g.drawString("A CONTAMINAÇÃO NÃO FOI CONTROLADA A TEMPO.", 20, 200);
+				g.drawString("TUDO ESTÁ PERDIDO.", 20, 230);
+				ingame = false;
 			}
 			
 			try {
@@ -233,7 +244,7 @@ public class Game extends JFrame implements KeyListener {
 		
 		if (System.currentTimeMillis() - mov_delay < FPS)
 			return;
-		else {
+		else if(ingame){
 
 			mov_delay = System.currentTimeMillis();
 			// Do your work here...
@@ -256,7 +267,7 @@ public class Game extends JFrame implements KeyListener {
 			}
 		}
 		
-		if (e.getKeyCode() == KeyEvent.VK_A) {
+		if (e.getKeyCode() == KeyEvent.VK_A && ingame) {
 			if (System.currentTimeMillis() - atk_delay < _ATK_DELAY)
 				return;
 			else {
@@ -273,6 +284,7 @@ public class Game extends JFrame implements KeyListener {
 			continua_intro = false;
 		
 		if (e.getKeyCode() == KeyEvent.VK_R && !continua_intro){
+			ingame = true;
 			limpa_mapa();
 			for (Timer timer : timers) {
 				timer.cancel();
