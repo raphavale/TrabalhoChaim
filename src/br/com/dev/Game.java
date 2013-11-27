@@ -48,10 +48,14 @@ public class Game extends JFrame implements KeyListener {
 	int time_elapsed = 0;
 	public static int pontos = 0;
 	public static Mapa each;
+	public static int contaminacao = 0;
 	public static LinkedList<Monstro> monstros = new LinkedList<Monstro>();
 	char teclaPressionada;
 	public static ArrayList<Timer> timers = new ArrayList<Timer>();
-	
+	static int dano;
+	static int xd;
+	static int yd;
+	static int cdano;
 
 	public void inicializar() {
 		
@@ -117,6 +121,21 @@ public class Game extends JFrame implements KeyListener {
 			g.setFont(myFont2);
 			g.setColor(Color.BLUE);
 			g.drawString("Para recomeçar aperte R", 20, 400);
+			if(contaminacao < 25)
+				g.setColor(Color.GREEN);
+			else if(contaminacao < 50)
+				g.setColor(Color.YELLOW);
+			else
+				g.setColor(Color.RED);
+			
+			g.drawString("Contaminação:"+contaminacao, 350, 400);
+			
+			if(cdano > 0){
+				g.setColor(Color.RED);
+				g.drawString(Integer.toString(dano), xd, yd);
+				cdano--;
+			}
+			
 			try {
 				Thread.sleep(1000 / FPS);
 			} catch (Exception e) {
@@ -142,12 +161,17 @@ public class Game extends JFrame implements KeyListener {
 			//test edges.
 			
 			monstros.add(new Monstro(x,y, lvl,false));
+			contaminacao += 1*lvl;
 		}
 	}
 	
 	private void limpa_monstros(){
 		for (int i = 0; i < monstros.size(); i++) {
 			if(monstros.get(i).getVida() < 0){
+				if(monstros.get(i).is_chefe)
+					contaminacao-=3*monstros.get(i).level;
+				else
+					contaminacao-=1*monstros.get(i).level;
 				monstros.remove(i);
 				i--;
 			}
@@ -159,6 +183,7 @@ public class Game extends JFrame implements KeyListener {
 				monstros.remove(i);
 				i--;
 		}
+		contaminacao = 0;
 	}
 
 	private void gerar_chefe(int n, int lvl){
@@ -168,6 +193,7 @@ public class Game extends JFrame implements KeyListener {
 						
 			monstros.add(new Monstro(x,y,lvl,true));
 			lvl_monstros++;
+			contaminacao += 3*lvl;
 		}
 	}
 	

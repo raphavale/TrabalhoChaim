@@ -1,28 +1,35 @@
 package br.com.dev;
 
+import java.awt.Color;
+import java.awt.Font;
 import java.awt.Graphics;
 import java.awt.image.BufferedImage;
 import java.awt.image.ImageObserver;
 import java.util.Random;
 
 import javax.swing.ImageIcon;
+import javax.swing.JFrame;
 
-public class Monstro {
+public class Monstro extends JFrame {
 
 	private int vida = 3;
-	public static final short width = 60;
-	public static final short height = 60;
+	public short width = 60;
+	public short height = 60;
 	private byte cena_atual = 0;
 	private ImageIcon spr[];
 	private int x;
 	private int y;
 	private long time = System.currentTimeMillis();
-	private boolean is_chefe;
+	boolean is_chefe;
+	int level;
 	
 	Monstro(int x, int y, int level, boolean is_chefe) {
 		this.is_chefe = is_chefe;
+		this.level = level;
 		if(is_chefe)
 		{
+			width = 100;
+			height = 100;
 			spr = new ImageIcon[4];
 			for (int i = 0; i < spr.length; i++) {
 				spr[i] = new ImageIcon("src/img/char/monstro/boss_" + (i + 1)
@@ -78,16 +85,22 @@ public class Monstro {
 		x = x+10;
 		while ( System.currentTimeMillis() < t + 200 );
 		x = x-10;
-		
 		vida = vida-p.getPoderAtaque();
+		Game.dano = p.getPoderAtaque();
+		Game.xd = x;
+		Game.yd = y;
+		Game.cdano = 10;
+		
 		if (vida<0){
-			if (this.is_chefe)
+			if (this.is_chefe){
 				Game.pontos+=500;
-			else
-				Game.pontos+=100;
-			Random x = new Random();
-			if (x.nextInt(100) < 5){
 				p.pegar_bonus();
+			}else{
+				Game.pontos+=100;
+				Random x = new Random();
+				if (x.nextInt(100) < 20){
+					p.pegar_bonus();
+				}
 			}
 			return true;
 		}

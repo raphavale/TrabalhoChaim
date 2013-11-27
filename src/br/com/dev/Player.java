@@ -71,7 +71,7 @@ public class Player {
             public void run() {
                 poder_ataque--;
             }
-        }, 10000);
+        }, 60000);
 	}
 	public void andarEsq(){
 		int i = 1;
